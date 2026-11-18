@@ -2,7 +2,7 @@
 [
   {
     "id": "PMJAY001",
-    "title": "Thermal Burns - Dressing Without Anesthesia",
+    "title": "Thermal Burns - Dressing Without Anesthesia - Updated.",
     "scheme": "PM-JAY",
     "package_code": "BM001",
     "procedure_code": "BM001A",
@@ -16,7 +16,7 @@
     },
     "preauth_required": null,
     "govt_only": null,
-    "source": "NHA HBP 2022, Annexure 1, Burns Management, BM001A"
+    "source_url": "https://nha.gov.in/img/resources/HBP2022.pdf"
   },
   {
     "id": "PMJAY002",
@@ -34,7 +34,7 @@
     },
     "preauth_required": null,
     "govt_only": null,
-    "source": "NHA HBP 2022, Annexure 1, Burns Management, BM001B"
+    "source_url": "https://nha.gov.in/img/resources/HBP2022.pdf"
   },
   {
     "id": "PMJAY003",
@@ -52,7 +52,7 @@
     },
     "preauth_required": null,
     "govt_only": null,
-    "source": "NHA HBP 2022, Annexure 1, Burns Management, BM001C"
+    "source_url": "https://nha.gov.in/img/resources/HBP2022.pdf"
   },
   {
     "id": "PMJAY004",
@@ -70,7 +70,7 @@
     },
     "preauth_required": null,
     "govt_only": null,
-    "source": "NHA HBP 2022, Annexure 1, Burns Management, BM001D"
+    "source_url": "https://nha.gov.in/img/resources/HBP2022.pdf"
   },
   {
     "id": "PMJAY005",
@@ -88,7 +88,7 @@
     },
     "preauth_required": null,
     "govt_only": null,
-    "source": "NHA HBP 2022, Annexure 1, Burns Management, BM001E"
+    "source_url": "https://nha.gov.in/img/resources/HBP2022.pdf"
   },
   {
     "id": "PMJAY006",
@@ -106,7 +106,7 @@
     },
     "preauth_required": null,
     "govt_only": null,
-    "source": "NHA HBP 2022, Annexure 1, Burns Management, BM002A"
+    "source_url": "https://nha.gov.in/img/resources/HBP2022.pdf"
   },
   {
     "id": "PMJAY007",
@@ -124,7 +124,7 @@
     },
     "preauth_required": null,
     "govt_only": null,
-    "source": "NHA HBP 2022, Annexure 1, Burns Management, BM002B"
+    "source_url": "https://nha.gov.in/img/resources/HBP2022.pdf"
   },
   {
     "id": "PMJAY008",
@@ -142,7 +142,7 @@
     },
     "preauth_required": null,
     "govt_only": null,
-    "source": "NHA HBP 2022, Annexure 1, Burns Management, BM002C"
+    "source_url": "https://nha.gov.in/img/resources/HBP2022.pdf"
   },
   {
     "id": "PMJAY009",
@@ -160,7 +160,7 @@
     },
     "preauth_required": null,
     "govt_only": null,
-    "source": "NHA HBP 2022, Annexure 1, Burns Management, BM002D"
+    "source_url": "https://nha.gov.in/img/resources/HBP2022.pdf"
   },
   {
     "id": "PMJAY010",
@@ -178,7 +178,7 @@
     },
     "preauth_required": null,
     "govt_only": null,
-    "source": "NHA HBP 2022, Annexure 1, Burns Management, BM002E"
+    "source_url": "https://nha.gov.in/img/resources/HBP2022.pdf"
   },
 
   {
@@ -201,7 +201,7 @@
     },
     "preauth_required": null,
     "govt_only": null,
-    "source": "Official CMCHIS website, Procedure List, Package Rates"
+    "source_url": "https://www.cmchistn.com/empanelment/package-list"
   },
   {
     "id": "CMCHIS002",
@@ -223,7 +223,7 @@
     },
     "preauth_required": null,
     "govt_only": null,
-    "source": "Official CMCHIS website, Procedure List, Package Rates"
+    "source_url": "https://www.cmchistn.com/empanelment/package-list"
   },
   {
     "id": "CMCHIS003",
@@ -245,7 +245,7 @@
     },
     "preauth_required": null,
     "govt_only": null,
-    "source": "Official CMCHIS website, Procedure List, Package Rates"
+    "source_url": "https://www.cmchistn.com/empanelment/package-list"
   },
   {
     "id": "CMCHIS004",
@@ -267,7 +267,7 @@
     },
     "preauth_required": null,
     "govt_only": null,
-    "source": "Official CMCHIS website, Procedure List, Package Rates"
+    "source_url": "https://www.cmchistn.com/empanelment/package-list"
   },
   {
     "id": "CMCHIS005",
@@ -289,7 +289,7 @@
     },
     "preauth_required": null,
     "govt_only": null,
-    "source": "Official CMCHIS website, Procedure List, Package Rates"
+    "source_url": "https://www.cmchistn.com/empanelment/package-list"
   },
   {
     "id": "CMCHIS006",
@@ -311,7 +311,7 @@
     },
     "preauth_required": null,
     "govt_only": null,
-    "source": "Official CMCHIS website, Procedure List, Package Rates"
+    "source_url": "https://www.cmchistn.com/empanelment/package-list"
   },
   {
     "id": "CMCHIS007",
@@ -333,7 +333,7 @@
     },
     "preauth_required": null,
     "govt_only": null,
-    "source": "Official CMCHIS website, Procedure List, Package Rates"
+    "source_url": "https://www.cmchistn.com/empanelment/package-list"
   },
   {
     "id": "CMCHIS008",
@@ -355,7 +355,7 @@
     },
     "preauth_required": null,
     "govt_only": null,
-    "source": "Official CMCHIS website, Procedure List, Package Rates"
+    "source_url": "https://www.cmchistn.com/empanelment/package-list"
   },
   {
     "id": "CMCHIS009",
@@ -377,7 +377,7 @@
     },
     "preauth_required": null,
     "govt_only": null,
-    "source": "Official CMCHIS website, Procedure List, Package Rates"
+    "source_url": "https://www.cmchistn.com/empanelment/package-list"
   },
   {
     "id": "CMCHIS010",
@@ -399,6 +399,6 @@
     },
     "preauth_required": null,
     "govt_only": null,
-    "source": "Official CMCHIS website, Procedure List, Package Rates"
+    "source_url": "https://www.cmchistn.com/empanelment/package-list"
   }
 ]
