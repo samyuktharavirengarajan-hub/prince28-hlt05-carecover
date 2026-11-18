@@ -1,17 +1,404 @@
+
 [
   {
-    "id": "001",
-    "title": "Alpha guideline",
-    "year": 2023
+    "id": "PMJAY001",
+    "title": "Thermal Burns - Dressing Without Anesthesia",
+    "scheme": "PM-JAY",
+    "package_code": "BM001",
+    "procedure_code": "BM001A",
+    "procedure": "Thermal burns with TBSA below 20% in adults and below 10% in children",
+    "specialty": "Burns Management",
+    "rate": {
+      "NRP": 7000,
+      "tier3": 7000,
+      "tier2": 8200,
+      "tier1": 8800
+    },
+    "preauth_required": null,
+    "govt_only": null,
+    "source": "NHA HBP 2022, Annexure 1, Burns Management, BM001A"
   },
   {
-    "id": "002",
-    "title": "Beta circular",
-    "year": 2024
+    "id": "PMJAY002",
+    "title": "Thermal Burns - TBSA Up to 25%",
+    "scheme": "PM-JAY",
+    "package_code": "BM001",
+    "procedure_code": "BM001B",
+    "procedure": "Management of thermal burns with TBSA up to 25%",
+    "specialty": "Burns Management",
+    "rate": {
+      "NRP": 40000,
+      "tier3": 50000,
+      "tier2": 56800,
+      "tier1": 60000
+    },
+    "preauth_required": null,
+    "govt_only": null,
+    "source": "NHA HBP 2022, Annexure 1, Burns Management, BM001B"
   },
   {
-    "id": "003",
-    "title": "Gamma notice",
-    "year": 2025
+    "id": "PMJAY003",
+    "title": "Thermal Burns - TBSA 25% to 40%",
+    "scheme": "PM-JAY",
+    "package_code": "BM001",
+    "procedure_code": "BM001C",
+    "procedure": "Management of thermal burns with TBSA between 25% and 40%",
+    "specialty": "Burns Management",
+    "rate": {
+      "NRP": 50000,
+      "tier3": 62500,
+      "tier2": 71000,
+      "tier1": 75000
+    },
+    "preauth_required": null,
+    "govt_only": null,
+    "source": "NHA HBP 2022, Annexure 1, Burns Management, BM001C"
+  },
+  {
+    "id": "PMJAY004",
+    "title": "Thermal Burns - TBSA 40% to 60%",
+    "scheme": "PM-JAY",
+    "package_code": "BM001",
+    "procedure_code": "BM001D",
+    "procedure": "Management of thermal burns with TBSA between 40% and 60%",
+    "specialty": "Burns Management",
+    "rate": {
+      "NRP": 80000,
+      "tier3": 100000,
+      "tier2": 113600,
+      "tier1": 120000
+    },
+    "preauth_required": null,
+    "govt_only": null,
+    "source": "NHA HBP 2022, Annexure 1, Burns Management, BM001D"
+  },
+  {
+    "id": "PMJAY005",
+    "title": "Thermal Burns - TBSA 60% to 80%",
+    "scheme": "PM-JAY",
+    "package_code": "BM001",
+    "procedure_code": "BM001E",
+    "procedure": "Management of thermal burns with TBSA between 60% and 80%",
+    "specialty": "Burns Management",
+    "rate": {
+      "NRP": 80000,
+      "tier3": 100000,
+      "tier2": 113600,
+      "tier1": 120000
+    },
+    "preauth_required": null,
+    "govt_only": null,
+    "source": "NHA HBP 2022, Annexure 1, Burns Management, BM001E"
+  },
+  {
+    "id": "PMJAY006",
+    "title": "Scald Burns - Dressing Without Anesthesia",
+    "scheme": "PM-JAY",
+    "package_code": "BM002",
+    "procedure_code": "BM002A",
+    "procedure": "Scald burns with TBSA below 20% in adults and below 10% in children",
+    "specialty": "Burns Management",
+    "rate": {
+      "NRP": 7000,
+      "tier3": 7000,
+      "tier2": 8200,
+      "tier1": 8800
+    },
+    "preauth_required": null,
+    "govt_only": null,
+    "source": "NHA HBP 2022, Annexure 1, Burns Management, BM002A"
+  },
+  {
+    "id": "PMJAY007",
+    "title": "Scald Burns - TBSA Up to 25%",
+    "scheme": "PM-JAY",
+    "package_code": "BM002",
+    "procedure_code": "BM002B",
+    "procedure": "Management of scald burns with TBSA up to 25%",
+    "specialty": "Burns Management",
+    "rate": {
+      "NRP": 40000,
+      "tier3": 50000,
+      "tier2": 56800,
+      "tier1": 60000
+    },
+    "preauth_required": null,
+    "govt_only": null,
+    "source": "NHA HBP 2022, Annexure 1, Burns Management, BM002B"
+  },
+  {
+    "id": "PMJAY008",
+    "title": "Scald Burns - TBSA 25% to 40%",
+    "scheme": "PM-JAY",
+    "package_code": "BM002",
+    "procedure_code": "BM002C",
+    "procedure": "Management of scald burns with TBSA between 25% and 40%",
+    "specialty": "Burns Management",
+    "rate": {
+      "NRP": 50000,
+      "tier3": 62500,
+      "tier2": 71000,
+      "tier1": 75000
+    },
+    "preauth_required": null,
+    "govt_only": null,
+    "source": "NHA HBP 2022, Annexure 1, Burns Management, BM002C"
+  },
+  {
+    "id": "PMJAY009",
+    "title": "Scald Burns - TBSA 40% to 60%",
+    "scheme": "PM-JAY",
+    "package_code": "BM002",
+    "procedure_code": "BM002D",
+    "procedure": "Management of scald burns with TBSA between 40% and 60%",
+    "specialty": "Burns Management",
+    "rate": {
+      "NRP": 80000,
+      "tier3": 100000,
+      "tier2": 113600,
+      "tier1": 120000
+    },
+    "preauth_required": null,
+    "govt_only": null,
+    "source": "NHA HBP 2022, Annexure 1, Burns Management, BM002D"
+  },
+  {
+    "id": "PMJAY010",
+    "title": "Scald Burns - TBSA 60% to 80%",
+    "scheme": "PM-JAY",
+    "package_code": "BM002",
+    "procedure_code": "BM002E",
+    "procedure": "Management of scald burns with TBSA between 60% and 80%",
+    "specialty": "Burns Management",
+    "rate": {
+      "NRP": 80000,
+      "tier3": 100000,
+      "tier2": 113600,
+      "tier1": 120000
+    },
+    "preauth_required": null,
+    "govt_only": null,
+    "source": "NHA HBP 2022, Annexure 1, Burns Management, BM002E"
+  },
+
+  {
+    "id": "CMCHIS001",
+    "title": "Coronary Balloon Angioplasty (PPCI)",
+    "scheme": "CMCHIS",
+    "package_code": "CMU0001",
+    "procedure_code": "CMU0001",
+    "procedure": "Coronary Balloon Angioplasty (PPCI)",
+    "specialty": "Interventional Cardiology",
+    "rate": {
+      "A1": 50400,
+      "A2": 50400,
+      "A3": 50400,
+      "A4": 50400,
+      "A5": 50400,
+      "A6": 50400,
+      "S1": 50400,
+      "S2": 50400
+    },
+    "preauth_required": null,
+    "govt_only": null,
+    "source": "Official CMCHIS website, Procedure List, Package Rates"
+  },
+  {
+    "id": "CMCHIS002",
+    "title": "PTCA with Stent",
+    "scheme": "CMCHIS",
+    "package_code": "CMU0002",
+    "procedure_code": "CMU0002",
+    "procedure": "PTCA with Stent",
+    "specialty": "Interventional Cardiology",
+    "rate": {
+      "A1": 66200,
+      "A2": 66200,
+      "A3": 66200,
+      "A4": 66200,
+      "A5": 66200,
+      "A6": 66200,
+      "S1": 66200,
+      "S2": 66200
+    },
+    "preauth_required": null,
+    "govt_only": null,
+    "source": "Official CMCHIS website, Procedure List, Package Rates"
+  },
+  {
+    "id": "CMCHIS003",
+    "title": "Additional Stent for PTCA",
+    "scheme": "CMCHIS",
+    "package_code": "CMU0003",
+    "procedure_code": "CMU0003",
+    "procedure": "Additional Stent for PTCA",
+    "specialty": "Interventional Cardiology",
+    "rate": {
+      "A1": 18700,
+      "A2": 18700,
+      "A3": 16850,
+      "A4": 16850,
+      "A5": 16850,
+      "A6": 16850,
+      "S1": 18700,
+      "S2": 16850
+    },
+    "preauth_required": null,
+    "govt_only": null,
+    "source": "Official CMCHIS website, Procedure List, Package Rates"
+  },
+  {
+    "id": "CMCHIS004",
+    "title": "ASD Device Closure",
+    "scheme": "CMCHIS",
+    "package_code": "CMU0004",
+    "procedure_code": "CMU0004",
+    "procedure": "ASD Device Closure",
+    "specialty": "Interventional Cardiology",
+    "rate": {
+      "A1": 83000,
+      "A2": 83000,
+      "A3": 74700,
+      "A4": 74700,
+      "A5": 74700,
+      "A6": 74700,
+      "S1": 83000,
+      "S2": 74700
+    },
+    "preauth_required": null,
+    "govt_only": null,
+    "source": "Official CMCHIS website, Procedure List, Package Rates"
+  },
+  {
+    "id": "CMCHIS005",
+    "title": "VSD Device Closure",
+    "scheme": "CMCHIS",
+    "package_code": "CMU0005",
+    "procedure_code": "CMU0005",
+    "procedure": "VSD Device Closure",
+    "specialty": "Interventional Cardiology",
+    "rate": {
+      "A1": 83000,
+      "A2": 83000,
+      "A3": 74700,
+      "A4": 74700,
+      "A5": 74700,
+      "A6": 74700,
+      "S1": 83000,
+      "S2": 74700
+    },
+    "preauth_required": null,
+    "govt_only": null,
+    "source": "Official CMCHIS website, Procedure List, Package Rates"
+  },
+  {
+    "id": "CMCHIS006",
+    "title": "PDA Stenting",
+    "scheme": "CMCHIS",
+    "package_code": "CMU0006",
+    "procedure_code": "CMU0006",
+    "procedure": "PDA Stenting",
+    "specialty": "Interventional Cardiology",
+    "rate": {
+      "A1": 63000,
+      "A2": 63000,
+      "A3": 56700,
+      "A4": 56700,
+      "A5": 56700,
+      "A6": 56700,
+      "S1": 63000,
+      "S2": 56700
+    },
+    "preauth_required": null,
+    "govt_only": null,
+    "source": "Official CMCHIS website, Procedure List, Package Rates"
+  },
+  {
+    "id": "CMCHIS007",
+    "title": "PDA Device Closure",
+    "scheme": "CMCHIS",
+    "package_code": "CMU0007",
+    "procedure_code": "CMU0007",
+    "procedure": "PDA Device Closure",
+    "specialty": "Interventional Cardiology",
+    "rate": {
+      "A1": 53000,
+      "A2": 53000,
+      "A3": 47700,
+      "A4": 47700,
+      "A5": 47700,
+      "A6": 47700,
+      "S1": 53000,
+      "S2": 47700
+    },
+    "preauth_required": null,
+    "govt_only": null,
+    "source": "Official CMCHIS website, Procedure List, Package Rates"
+  },
+  {
+    "id": "CMCHIS008",
+    "title": "PDA Multiple Coils",
+    "scheme": "CMCHIS",
+    "package_code": "CMU0008",
+    "procedure_code": "CMU0008",
+    "procedure": "PDA Multiple Coils",
+    "specialty": "Interventional Cardiology",
+    "rate": {
+      "A1": 40000,
+      "A2": 40000,
+      "A3": 36000,
+      "A4": 36000,
+      "A5": 36000,
+      "A6": 36000,
+      "S1": 40000,
+      "S2": 36000
+    },
+    "preauth_required": null,
+    "govt_only": null,
+    "source": "Official CMCHIS website, Procedure List, Package Rates"
+  },
+  {
+    "id": "CMCHIS009",
+    "title": "Balloon Valvotomy (Any Valve)",
+    "scheme": "CMCHIS",
+    "package_code": "CMU0009",
+    "procedure_code": "CMU0009",
+    "procedure": "Balloon Valvotomy (Any Valve)",
+    "specialty": "Interventional Cardiology",
+    "rate": {
+      "A1": 39000,
+      "A2": 39000,
+      "A3": 35100,
+      "A4": 35100,
+      "A5": 35100,
+      "A6": 35100,
+      "S1": 39000,
+      "S2": 35100
+    },
+    "preauth_required": null,
+    "govt_only": null,
+    "source": "Official CMCHIS website, Procedure List, Package Rates"
+  },
+  {
+    "id": "CMCHIS010",
+    "title": "Balloon Valvotomy (Any Valve) - Pulmonary",
+    "scheme": "CMCHIS",
+    "package_code": "CMU0009-A",
+    "procedure_code": "CMU0009-A",
+    "procedure": "Balloon Valvotomy (Any Valve) - Pulmonary",
+    "specialty": "Interventional Cardiology",
+    "rate": {
+      "A1": 39000,
+      "A2": 39000,
+      "A3": 35100,
+      "A4": 35100,
+      "A5": 35100,
+      "A6": 35100,
+      "S1": 39000,
+      "S2": 35100
+    },
+    "preauth_required": null,
+    "govt_only": null,
+    "source": "Official CMCHIS website, Procedure List, Package Rates"
   }
 ]
