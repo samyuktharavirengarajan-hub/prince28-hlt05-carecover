@@ -4,6 +4,9 @@ __pycache__/
 .venv/
 .pytest_cache/
 .ruff_cache/
+# Coverage reports
+.coverage
+htmlcov/
 
 # Secrets: never commit
 .env
