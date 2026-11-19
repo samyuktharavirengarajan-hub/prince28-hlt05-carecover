@@ -3,7 +3,7 @@
 
 Tells a family whether a treatment is covered under Ayushman Bharat PM-JAY and Tamil Nadu's CMCHIS, the package rate, and which empanelled hospitals offer it.
 
-**Status:** Day 1 foundation (FastAPI skeleton, quality gates). Live URL from Day 5.
+**Status:** Day 4 foundation complete — FastAPI, PostgreSQL, Docker Compose, migrations, and automated tests. Live URL from Day 5.
 
 ## Who it's for
 
@@ -35,19 +35,112 @@ Package card: procedure shown with the PM-JAY code and rate next to the CMCHIS c
 
 Correct scheme + code + rate for 90%+ of 50 procedure questions.
 
-## Run it locally
+## Run locally with Docker (recommended)
+
+Requirements:
+- Docker Desktop
+- Docker Compose
+
+Start the complete application:
+
+```bash
+docker compose up --build -d
+```
+
+Services:
+- API: http://localhost:8001
+- Swagger documentation: http://localhost:8001/docs
+- PostgreSQL: localhost:5433
+- Redis: localhost:6379
+
+Check service health:
+
+```bash
+docker compose ps
+```
+
+View logs:
+
+```bash
+docker compose logs -f
+```
+
+Stop the stack while preserving database data:
+
+```bash
+docker compose down
+```
+
+Remove containers and database volumes:
+
+```bash
+docker compose down -v
+```
+
+## Run locally without Docker
+
+Requirements: Python 3.12 and uv.
 
 ```bash
 uv sync
-cp .env.example .env   # Windows: copy .env.example .env
-uv run uvicorn carecover.api.main:create_app --factory --reload
 ```
 
-Then open http://localhost:8000/docs
+Copy `.env.example` to `.env` and configure the database connection.
 
-## Checks
+Apply migrations and load sample data:
 
 ```bash
-uv run pytest
-uv run ruff check .
+uv run poe migrate
+uv run poe seed
+```
+
+Start the API:
+
+```bash
+uv run poe dev
+```
+
+Open http://localhost:8000/docs
+
+## Tests and quality checks
+
+Run unit tests:
+
+```bash
+uv run poe test
+```
+
+Run PostgreSQL integration tests (requires Docker Compose database):
+
+```bash
+uv run poe test-integration
+```
+
+Run all tests with coverage:
+
+```bash
+uv run poe cov
+```
+
+Run lint and formatting checks:
+
+```bash
+uv run poe lint
+```
+
+## Makefile shortcuts
+
+On systems with GNU Make:
+
+```bash
+make up
+make down
+make logs
+make ps
+make test
+make test-integration
+make cov
+make lint
+make migrate
+make seed
 ```
