@@ -181,3 +181,219 @@ Disabling sequential scans was only an experiment to demonstrate index usage. It
 - Migrated API document retrieval from JSON storage to PostgreSQL.
 - Understood query execution plans using EXPLAIN ANALYZE.
 - Verified that PostgreSQL can use the GIN index for JSONB filtering.
+
+
+# Day 4 — Docker, Compose and Automated Testing
+
+## 1. Multi-stage Dockerfile
+
+Created a production-oriented multi-stage Dockerfile.
+
+### Build stage
+- Base image: Python 3.12 slim
+- Installed pinned uv version 0.11.32
+- Used `uv sync --locked` for reproducible dependency installation.
+- Used Docker cache mounts to avoid repeatedly downloading dependencies.
+
+### Runtime stage
+- Copied only the required virtual environment and application files.
+- Created a non-root `app` user.
+- Exposed port 8000.
+- Configured Uvicorn to run the FastAPI application.
+
+### Build verification
+- Built successfully using `docker build -t carecover:dev .`
+- Image disk usage: approximately 300 MB.
+- Image content size: approximately 70 MB.
+- Verified that unchanged layers were cached during rebuilds.
+- Verified that code changes rebuilt the required application layer.
+
+## 2. Docker Compose Stack
+
+Created `docker-compose.yml` to run the application and its dependencies.
+
+Services:
+
+- PostgreSQL with pgvector, version 17
+- Redis 7 Alpine
+- Migration and sample-data loading service
+- FastAPI application
+
+### Port mapping
+
+- API: localhost:8001 → container:8000
+- PostgreSQL: localhost:5433 → container:5432
+- Redis: localhost:6379
+
+### Startup dependencies
+
+- PostgreSQL and Redis have health checks.
+- Migration service waits for PostgreSQL to become healthy.
+- API waits for PostgreSQL, Redis and successful migration completion.
+
+### Database initialization
+
+Created `docker/initdb/01-create-test-db.sql` to create a separate `app_test` database when PostgreSQL initializes a new volume.
+
+## 3. Docker Stack Verification
+
+Commands used:
+
+```bash
+docker compose config
+docker compose up --build -d
+docker compose ps
+```
+
+Verified:
+- Docker Compose configuration was valid.
+- PostgreSQL became healthy.
+- Redis became healthy.
+- Migration service completed successfully.
+- API became healthy.
+- Swagger documentation was accessible at `/docs`.
+- `GET /v1/documents` returned HTTP 200 with 20 records.
+
+## 4. Liveness and Readiness Testing
+
+Performed a controlled database failure test.
+
+### Database stopped
+
+Command:
+
+```bash
+docker compose stop db
+```
+
+Results:
+
+- `/health` returned HTTP 200.
+- `/ready` returned HTTP 503.
+- Readiness check correctly reported the database as unavailable.
+
+### Database restarted
+
+Command:
+
+```bash
+docker compose start db
+```
+
+After the database recovered:
+
+- `/ready` returned HTTP 200.
+- Database readiness check returned true.
+
+This verified the difference between application liveness and dependency readiness.
+
+## 5. Idempotent Data Loading
+
+Stopped and restarted the Compose stack without deleting its database volume.
+
+Verified migration and seed logs:
+
+```text
+Inserted: 0
+Updated: 0
+Unchanged: 20
+```
+
+This confirmed that restarting the stack did not create duplicate sample records.
+
+## 6. Unit and Integration Test Separation
+
+Organized the test suite into:
+
+- `tests/unit/`
+- `tests/integration/`
+
+Created separate test configuration for each suite.
+
+### Unit tests
+
+Command:
+
+```bash
+uv run poe test
+```
+
+Result:
+
+```text
+11 passed
+```
+
+### Integration tests
+
+Command:
+
+```bash
+uv run poe test-integration
+```
+
+Result:
+
+```text
+7 passed
+```
+
+Integration tests use a unique PostgreSQL database for each test run.
+
+The fixture:
+- Creates a temporary database.
+- Applies Alembic migrations.
+- Runs integration tests.
+- Drops the temporary database after completion.
+
+This prevents integration tests from interfering with development data or one another.
+
+## 7. Test Coverage
+
+Command:
+
+```bash
+uv run poe cov
+```
+
+Result:
+
+```text
+18 passed
+Total coverage: 80%
+```
+
+Configured coverage reporting to show missing lines and branch coverage.
+
+Added `.coverage` and `htmlcov/` to `.gitignore`.
+
+## 8. Developer Shortcuts
+
+Added Poe tasks in `pyproject.toml`:
+
+- `uv run poe dev`
+- `uv run poe lint`
+- `uv run poe test`
+- `uv run poe test-integration`
+- `uv run poe cov`
+- `uv run poe migrate`
+- `uv run poe seed`
+
+Created a Makefile with shortcuts for Docker Compose, testing, coverage, linting and database operations.
+
+## 9. Key Technical Learnings
+
+- Multi-stage Docker builds separate build dependencies from the runtime image.
+- Docker layer caching makes repeated builds faster.
+- Running containers as non-root users improves security.
+- Docker Compose service names allow containers to communicate without using localhost.
+- Health checks help coordinate service startup.
+- Liveness checks indicate whether the application is running; readiness checks indicate whether it can serve requests.
+- Isolated integration-test databases protect development data.
+- Coverage reports identify untested application code.
+
+## 10. Day 4 Git Commits
+
+- `10c3804` — build: multi-stage Dockerfile with uv, non-root user
+- `0d1c7be` — build: docker compose stack with postgres, redis, migrations and api
+- `503b8df` — test: split unit and integration suites with fresh database
