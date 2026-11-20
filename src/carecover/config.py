@@ -8,13 +8,23 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        extra="ignore",
+    )
 
     app_name: str = "carecover"
-    # No default on purpose: if APP_ENV is missing, the app refuses to start (fail fast).
+    # No default on purpose: if APP_ENV is missing, the app refuses to start.
     app_env: Literal["local", "ci", "production"]
     log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR"] = "INFO"
     data_file: Path = Path("data/sample_records.json")
+
+    # PostgreSQL connection URL from .env
+    database_url: str
+
+    # The commit this image was built from. CI sets it (Dockerfile ARG GIT_SHA); locally "dev".
+    git_sha: str = "dev"
 
 
 @lru_cache
