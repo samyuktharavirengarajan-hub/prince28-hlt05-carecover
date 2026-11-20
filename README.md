@@ -1,9 +1,16 @@
 
 # CareCover
 
+[![CI](https://github.com/samyuktharavirengarajan-hub/prince28-hlt05-carecover/actions/workflows/ci.yml/badge.svg)](https://github.com/samyuktharavirengarajan-hub/prince28-hlt05-carecover/actions/workflows/ci.yml)
+[![Live](https://img.shields.io/website?url=https%3A%2F%2Fcarecover-oi5g.onrender.com%2Fhealth&label=live)](https://carecover-oi5g.onrender.com/docs)
+[![Uptime](https://img.shields.io/uptimerobot/ratio/m804750791-8b74ae8537f05524cb9d2c6b)](https://carecover-oi5g.onrender.com/health)
+
+**Live:** https://carecover-oi5g.onrender.com · [API docs](https://carecover-oi5g.onrender.com/docs) · [Health](https://carecover-oi5g.onrender.com/health)
+
 Tells a family whether a treatment is covered under Ayushman Bharat PM-JAY and Tamil Nadu's CMCHIS, the package rate, and which empanelled hospitals offer it.
 
-**Status:** Day 4 foundation complete — FastAPI, PostgreSQL, Docker Compose, migrations, and automated tests. Live URL from Day 5.
+**Status:** Week 1 complete · live at https://carecover-oi5g.onrender.com
+
 
 ## Who it's for
 
