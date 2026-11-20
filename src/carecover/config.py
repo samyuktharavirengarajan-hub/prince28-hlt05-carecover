@@ -23,6 +23,9 @@ class Settings(BaseSettings):
     # PostgreSQL connection URL from .env
     database_url: str
 
+    # The commit this image was built from. CI sets it (Dockerfile ARG GIT_SHA); locally "dev".
+    git_sha: str = "dev"
+
 
 @lru_cache
 def get_settings() -> Settings:
