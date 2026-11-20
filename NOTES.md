@@ -397,3 +397,149 @@ Created a Makefile with shortcuts for Docker Compose, testing, coverage, linting
 - `10c3804` — build: multi-stage Dockerfile with uv, non-root user
 - `0d1c7be` — build: docker compose stack with postgres, redis, migrations and api
 - `503b8df` — test: split unit and integration suites with fresh database
+
+
+# Day 5 — CI/CD, Production Deployment and Monitoring
+
+## 1. Production Deployment
+
+- Hosting: Render
+- Production URL: https://carecover-oi5g.onrender.com
+- API documentation: https://carecover-oi5g.onrender.com/docs
+- Health endpoint: https://carecover-oi5g.onrender.com/health
+- Database: Neon PostgreSQL
+- Container registry: GitHub Container Registry (GHCR)
+
+Verified:
+- Application deployed successfully.
+- `/health` returned HTTP 200.
+- `/ready` confirmed database connectivity.
+- `/docs` was accessible.
+- Production API returned HTTP 200 for `/v1/documents?limit=1`.
+
+## 2. Continuous Integration
+
+Created GitHub Actions CI workflow.
+
+Checks:
+- Ruff linting
+- Ruff formatting
+- Unit and integration tests
+- Docker image build
+- GHCR image publishing
+
+CI workflow:
+https://github.com/samyuktharavirengarajan-hub/prince28-hlt05-carecover/actions/workflows/ci.yml
+
+PR #6:
+https://github.com/samyuktharavirengarajan-hub/prince28-hlt05-carecover/pull/6
+
+## 3. Continuous Deployment
+
+Created GitHub Actions CD workflow.
+
+Deployment sequence:
+1. Wait for successful CI completion on main.
+2. Apply Alembic migrations to Neon.
+3. Deploy the exact SHA-tagged image to Render.
+4. Run production smoke tests.
+
+The workflow also supports manual rollback using a previous commit SHA.
+
+CD workflow:
+https://github.com/samyuktharavirengarajan-hub/prince28-hlt05-carecover/actions/workflows/cd.yml
+
+PR #7:
+https://github.com/samyuktharavirengarajan-hub/prince28-hlt05-carecover/pull/7
+
+## 4. Production Smoke Testing
+
+Created `scripts/smoke.py`.
+
+It verifies:
+- `/health` reports the expected application version.
+- `/ready` confirms database readiness.
+- `/v1/documents?limit=1` returns HTTP 200 and an items field.
+
+Final production smoke test passed against:
+`b3f6d56a1c638a4b982278bf4fa82502de8fe26d`
+
+## 5. Rollback Drill
+
+Selected the pre-CD CI merge commit:
+
+`5b38e137cb97616430d50586679b6fdd8d3d6c9e`
+
+Manual CD run #3:
+https://github.com/samyuktharavirengarajan-hub/prince28-hlt05-carecover/actions/runs/44775107497
+
+Result:
+- Workflow completed successfully.
+- Database migrations were skipped.
+- Older SHA-tagged image was deployed.
+- Production `/health` returned HTTP 200.
+- Live version matched the rollback SHA.
+
+## 6. Roll-forward Verification
+
+Restored the latest main version:
+
+`b3f6d56a1c638a4b982278bf4fa82502de8fe26d`
+
+Manual CD run #4:
+https://github.com/samyuktharavirengarajan-hub/prince28-hlt05-carecover/actions/runs/44775883420
+
+Result:
+- Workflow completed successfully.
+- Latest image was deployed.
+- Production `/health` returned HTTP 200.
+- Live version matched the expected main SHA.
+
+## 7. Database Safety During Rollback
+
+The rollback workflow skips database migrations and does not run Alembic downgrade.
+
+Therefore, the database schema remains at its existing migration revision while the application image is rolled back.
+
+This avoids destructive schema downgrades. Safe rollback depends on backward-compatible database migrations and application versions that can work with the retained schema.
+
+## 8. Monitoring
+
+Created an UptimeRobot HTTP(S) monitor.
+
+- Monitor URL: https://carecover-oi5g.onrender.com/health
+- Check interval: 5 minutes
+- Alert: Email notification
+- Badge: Monitor-specific read-only API key
+
+The API health route was updated to support both GET and HEAD requests because the free UptimeRobot monitor uses HEAD.
+
+Unit tests verify HEAD support.
+
+## 9. Secrets Management
+
+GitHub repository Settings → Secrets and variables → Actions:
+
+Secrets:
+- DATABASE_URL
+- RENDER_DEPLOY_HOOK
+
+Repository variable:
+- LIVE_URL
+
+Sensitive values are not stored in the repository.
+
+## 10. Performance Improvement
+
+Render Free instances can sleep when inactive. The first request may take longer because the service needs to wake up.
+
+One possible improvement is using an always-on hosting instance to reduce cold-start latency.
+
+## 11. Final Validation
+
+- Unit tests: 13 passed.
+- Ruff check: Passed.
+- Ruff format: 32 files formatted.
+- Rollback: Verified.
+- Roll-forward: Verified.
+- Production health: HTTP 200.
