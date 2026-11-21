@@ -42,6 +42,8 @@ Package card: procedure shown with the PM-JAY code and rate next to the CMCHIS c
 
 Correct scheme + code + rate for 90%+ of 50 procedure questions.
 
+## Run locally in one command
+
 ## Run locally with Docker (recommended)
 
 Requirements:
