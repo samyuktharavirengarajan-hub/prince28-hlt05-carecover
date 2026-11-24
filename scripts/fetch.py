@@ -1,17 +1,26 @@
 import asyncio
 
 from carecover.ingest.fetch import (
+    check_robots,
     download_all_sources,
     get_pending_sources,
     load_sources,
+    write_manifest,
 )
 
 
 async def main():
     sources = load_sources()
-    pending = get_pending_sources(sources)
 
     print(f"Total sources: {len(sources)}")
+
+    for source in sources:
+        status = check_robots(source["url"])
+        write_manifest(source, status)
+        print(f"{source['title']}: {status}")
+
+    pending = get_pending_sources(sources)
+
     print(f"Eligible sources: {len(pending)}")
 
     if not pending:
