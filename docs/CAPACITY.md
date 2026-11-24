@@ -3,31 +3,35 @@
 ## 1. Concurrency
 
 - Maximum concurrent downloads: 4
-- Implementation: Python asyncio Semaphore
+- Implementation: Python `asyncio.Semaphore`
 - Downloads are coordinated using asynchronous tasks.
+- This limits the number of simultaneous downloads and prevents excessive resource usage.
 
 ## 2. Request Rate Limiting
 
 - Per-host delay: 1 second
-- Implementation: Shared HostRateLimiter
+- Implementation: Shared `HostRateLimiter`
 - Requests to the same host are spaced to avoid excessive traffic.
+- This helps respect website server resources.
 
 ## 3. Retry Strategy
 
 - Maximum attempts: 3
 - Backoff strategy: Exponential backoff
-- Formula: 2^attempt + random jitter
-- Jitter range: 0 to 1 second
+- Formula: `2^attempt + random jitter`
+- Jitter range: 0 to 1 second.
+- Failed requests are retried with increasing delays.
 
 ## 4. Resume Capability
 
 - Partial downloads are stored using the `.pdf.part` extension.
 - HTTP Range headers are used to request remaining bytes.
-- Content-Range is checked before appending resumed content.
+- `Content-Range` is checked before appending resumed content.
+- This helps avoid downloading the entire file again after an interruption.
 
 ## 5. PDF Validation
 
-- Downloaded files are validated using pypdf.
+- Downloaded files are validated using `pypdf`.
 - A PDF must be readable and contain at least one page.
 - Invalid files are not marked as downloaded.
 
@@ -36,6 +40,7 @@
 - Sources identified: 2
 - Sources eligible for download: 0
 - Downloads completed: 0
+- Successfully downloaded documents: 0
 
 Downloads were not attempted because robots.txt permission was either unknown or explicitly denied.
 
@@ -49,10 +54,14 @@ Unit test results:
 
 Command:
 
-`uv run pytest tests/unit/ -v`
+```powershell
+uv run pytest tests/unit/ -v
+```
 
 ## 8. Limitations
 
-Actual download throughput, file sizes, and processing times have not been benchmarked because no source was eligible for download.
+- Actual download throughput has not been benchmarked.
+- File sizes and processing times have not been measured.
+- No production download capacity could be established because no source was eligible for download.
 
 The configured concurrency and rate limits describe implementation settings, not measured production capacity.
