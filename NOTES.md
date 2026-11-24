@@ -545,3 +545,39 @@ One possible improvement is using an always-on hosting instance to reduce cold-s
 - Rollback: Verified.
 - Roll-forward: Verified.
 - Production health: HTTP 200.
+
+
+# Day 7 — Document Parsing
+
+## 1. Database Schema
+
+- Added `headings` JSONB column to the pages table.
+- Created `parse_failures` table.
+- Generated and applied the Alembic migration.
+
+## 2. Parser Implementation
+
+Created:
+- `src/carecover/ingest/parse.py`
+- `src/carecover/ingest/store.py`
+- `scripts/parse_corpus.py`
+- `tests/unit/test_parse.py`
+- `tests/integration/test_parse_store.py`
+
+## 3. Validation
+
+- Unit tests: 36 passed.
+- Integration tests: 10 passed.
+- Ruff lint: Passed.
+- Python syntax check for `compare_parsers.py`: Passed.
+
+## 4. Dataset Status
+
+- Manifest entries: 2.
+- Downloaded files: 0.
+- Files available in `data/raw`: 0.
+- PM-JAY HBP 2022: `robots_unknown`.
+- PM-JAY Senior Citizens FAQ: `blocked_robots`.
+- Corpus parsing result: 0 files, 0 pages.
+
+The expected 364-file corpus is not available in the current repository. Parser comparison and full-corpus validation are pending confirmation of the correct dataset and manifest format.
