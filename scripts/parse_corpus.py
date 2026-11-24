@@ -8,6 +8,7 @@ uv run python scripts/parse_corpus.py --retry-failed  try the files in parse_fai
 
 import argparse
 import asyncio
+import hashlib
 import json
 import sys
 import time
@@ -26,18 +27,49 @@ from carecover.ingest.store import (
 )
 
 MANIFEST = Path("data/manifest.jsonl")
+MANUAL_MANIFEST = Path("data/manual_manifest.jsonl")
 
 
 def load_records() -> list[dict]:
-    """The newest manifest line per URL, for files that are really on disk."""
-    latest: dict[str, dict] = {}
-    for line in MANIFEST.read_text(encoding="utf-8").splitlines():
-        try:
-            record = json.loads(line)
-        except json.JSONDecodeError:
+    """Load downloaded files from both manifests, keeping distinct files."""
+    records_by_path: dict[str, dict] = {}
+
+    for manifest_path in (MANIFEST, MANUAL_MANIFEST):
+        if not manifest_path.exists():
             continue
-        latest[record["url"]] = record
-    return [r for r in latest.values() if r["status"] == "downloaded" and Path(r["path"]).is_file()]
+
+        latest: dict[str, dict] = {}
+
+        for line in manifest_path.read_text(encoding="utf-8").splitlines():
+            try:
+                record = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+
+            path = record.get("path") or record.get("file_path")
+            if not path:
+                continue
+
+            record["path"] = path
+            key = record["url"] if manifest_path == MANIFEST else path
+            latest[key] = record
+
+        for record in latest.values():
+            path = Path(record["path"])
+
+            if record["status"] != "downloaded" or not path.is_file():
+                continue
+
+            if not record.get("sha256"):
+                digest = hashlib.sha256()
+                with path.open("rb") as file:
+                    for chunk in iter(lambda: file.read(1024 * 1024), b""):
+                        digest.update(chunk)
+                record["sha256"] = digest.hexdigest()
+
+            records_by_path[record["path"]] = record
+
+    return list(records_by_path.values())
 
 
 def parse_one(path: Path, ocr_language: str) -> ParsedDoc:

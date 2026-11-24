@@ -108,7 +108,8 @@ def with_heading_paths(texts: list[str]) -> list[ParsedPage]:
     """Number the pages and remember, for each one, which section it starts in."""
     pages, path, in_code = [], [], False
     for number, text in enumerate(texts, start=1):
-        pages.append(ParsedPage(number, text, headings=list(path), tables=text.count("\n|---")))
+        table_count = len(re.findall(r"^\|(?:\s*:?-+:?\s*\|)+$", text, re.MULTILINE))
+        pages.append(ParsedPage(number, text, headings=list(path), tables=table_count))
         found, in_code = headings_in(text, in_code)
         for level, title in found:
             path = path[: level - 1] + [title]
