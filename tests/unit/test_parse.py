@@ -202,3 +202,40 @@ def test_comments_inside_code_blocks_are_not_headings(tmp_path):
     found, _ = parse.headings_in(doc.pages[0].text)
     assert found == [(1, "Install"), (2, "Next steps")]
     assert doc.title == "Install"
+
+
+def test_parse_excel_workbook(tmp_path):
+    from openpyxl import Workbook
+
+    path = tmp_path / "packages.xlsx"
+    workbook = Workbook()
+    sheet = workbook.active
+    sheet.title = "Packages"
+    sheet.append(["PMJAY Packages"])
+    sheet.append(["Package Name", "Speciality", "A1"])
+    sheet.append(["CMU1104", "PLASTIC SURGERY", 80000])
+    workbook.save(path)
+
+    doc = parse_file(path)
+
+    assert doc.parser == "openpyxl"
+    assert doc.kind == "data"
+    assert doc.title == "Packages"
+    assert len(doc.pages) == 1
+    assert "Package Name" in doc.pages[0].text
+    assert "CMU1104" in doc.pages[0].text
+    assert "80000" in doc.pages[0].text
+
+
+def test_parse_empty_excel_workbook(tmp_path):
+    from openpyxl import Workbook
+
+    path = tmp_path / "empty.xlsx"
+    workbook = Workbook()
+    workbook.active.delete_rows(1)
+    workbook.save(path)
+
+    with pytest.raises(ParseError) as error:
+        parse_file(path)
+
+    assert error.value.reason == "empty"

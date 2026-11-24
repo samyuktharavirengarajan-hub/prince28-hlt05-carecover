@@ -213,7 +213,17 @@ async def download_source(
                 write_manifest(source, "downloaded")
                 return "downloaded"
 
-            except (httpx.HTTPError, OSError):
+            except (httpx.HTTPError, OSError) as error:
+                print(
+                    f"Download attempt {attempt + 1}/{retries} "
+                    f"failed for {source['title']}: "
+                    f"{type(error).__name__}: {error}"
+                )
+                print(
+                    f"Download attempt {attempt + 1}/{retries} "
+                    f"failed for {source['title']}: "
+                    f"{type(error).__name__}: {error}"
+                )
                 if attempt == retries - 1:
                     write_manifest(source, "failed")
                     return "failed"

@@ -13,6 +13,7 @@ from pathlib import Path
 
 import pymupdf
 import trafilatura
+from openpyxl import load_workbook
 from pypdf import PdfReader
 
 TEXT_TYPES = {".md", ".mdx", ".markdown", ".txt", ".rst", ".adoc", ".sgml", ".py"}
@@ -238,6 +239,48 @@ def parse_html(path: Path) -> ParsedDoc:
 
 
 # ---------- text files ----------
+
+
+# ---------- Excel ----------
+def parse_excel(path: Path) -> ParsedDoc:
+    """Read an Excel workbook and convert each worksheet into a Markdown table."""
+    try:
+        workbook = load_workbook(path, read_only=True, data_only=True)
+        texts = []
+        for sheet in workbook.worksheets:
+            rows = [
+                [str(value).strip() if value is not None else "" for value in row]
+                for row in sheet.iter_rows(min_row=2, values_only=True)
+            ]
+
+            if not rows:
+                continue
+
+            width = max(len(row) for row in rows)
+            rows = [row + [""] * (width - len(row)) for row in rows]
+
+            header = rows[0]
+            markdown = [
+                "| " + " | ".join(header) + " |",
+                "| " + " | ".join("---" for _ in header) + " |",
+            ]
+
+            for row in rows[1:]:
+                markdown.append("| " + " | ".join(row) + " |")
+
+            texts.append(f"# {sheet.title}\n\n" + "\n".join(markdown))
+
+        workbook.close()
+
+    except Exception as exc:
+        raise ParseError("corrupt", str(exc)) from exc
+
+    if not texts:
+        raise ParseError("empty", "workbook has no non-empty worksheets")
+
+    return finish("openpyxl", "data", path.stem, texts)
+
+
 RST_MARKS = {"=": 1, "-": 2, "~": 3, "^": 3, '"': 3}
 
 
@@ -292,6 +335,8 @@ def parse_file(path: Path, pdf_parser: str = "pymupdf") -> ParsedDoc:
     try:
         if suffix == ".pdf":
             return PDF_PARSERS[pdf_parser](path)
+        if suffix in {".xlsx", ".xlsm"}:
+            return parse_excel(path)
         if suffix in {".html", ".htm"}:
             return parse_html(path)
         if suffix in TEXT_TYPES | DATA_TYPES:
