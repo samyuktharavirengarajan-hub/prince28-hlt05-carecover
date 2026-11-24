@@ -4,6 +4,7 @@ import asyncio
 import csv
 import json
 import random
+import time
 from pathlib import Path
 from urllib.parse import urlparse
 
@@ -117,28 +118,32 @@ def get_pending_sources(
     ]
 
 
-def check_robots(url: str) -> str:
-    """Check robots.txt permission for a URL."""
+def check_robots(url: str, retries: int = 3) -> str:
+    """Check robots.txt permission, retrying temporary network failures."""
     parsed_url = urlparse(url)
     robots_url = f"{parsed_url.scheme}://{parsed_url.netloc}/robots.txt"
 
-    try:
-        response = httpx.get(
-            robots_url,
-            timeout=10,
-            follow_redirects=True,
-        )
+    for attempt in range(retries):
+        try:
+            response = httpx.get(
+                robots_url,
+                timeout=15,
+                follow_redirects=True,
+            )
 
-        if response.status_code != 200:
-            return "robots_unknown"
+            if response.status_code != 200:
+                return "robots_unknown"
 
-        parser = Protego.parse(response.text)
-        allowed = parser.can_fetch(url, "CareCoverBot")
+            parser = Protego.parse(response.text)
+            allowed = parser.can_fetch(url, "CareCoverBot")
 
-        return "robots_allowed" if allowed else "blocked_robots"
+            return "robots_allowed" if allowed else "blocked_robots"
 
-    except httpx.HTTPError:
-        return "robots_unknown"
+        except httpx.HTTPError:
+            if attempt < retries - 1:
+                time.sleep(1)
+
+    return "robots_unknown"
 
 
 async def download_source(

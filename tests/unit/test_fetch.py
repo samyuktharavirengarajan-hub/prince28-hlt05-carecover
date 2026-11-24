@@ -144,3 +144,27 @@ def test_download_uses_range_header_for_partial_file(tmp_path):
     assert headers["Range"] == "bytes=100-"
     assert file_path.read_bytes() == pdf_bytes
     assert not partial_path.exists()
+
+
+def test_robots_retries_after_temporary_network_errors():
+    import httpx
+
+    response = Mock()
+    response.status_code = 200
+    response.text = "User-agent: *\nAllow: /"
+
+    with (
+        patch(
+            "carecover.ingest.fetch.httpx.get",
+            side_effect=[
+                httpx.TimeoutException("Timed out"),
+                httpx.TimeoutException("Timed out"),
+                response,
+            ],
+        ) as mock_get,
+        patch("carecover.ingest.fetch.time.sleep"),
+    ):
+        result = check_robots("https://example.com/test.pdf")
+
+    assert result == "robots_allowed"
+    assert mock_get.call_count == 3
