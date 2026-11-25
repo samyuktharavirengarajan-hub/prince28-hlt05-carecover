@@ -120,6 +120,7 @@ def test_circuit_breaker_states():
     assert breaker.state == "open" and not breaker.allow()
     now[0] = 11
     assert breaker.state == "half-open" and breaker.allow()
+    assert not breaker.allow()  # only one half-open probe is allowed
     breaker.failure()  # the test call failed: open again, for a new cooldown
     assert breaker.state == "open"
     now[0] = 22

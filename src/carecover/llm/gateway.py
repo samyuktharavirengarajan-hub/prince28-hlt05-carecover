@@ -234,6 +234,7 @@ class CircuitBreaker:
         self.threshold, self.cooldown, self._clock = threshold, cooldown, clock
         self.failures = 0
         self._opened_at: float | None = None
+        self._probe_in_flight = False
 
     @property
     def state(self) -> str:
@@ -242,15 +243,28 @@ class CircuitBreaker:
         return "half-open" if self._clock() - self._opened_at >= self.cooldown else "open"
 
     def allow(self) -> bool:
-        return self.state != "open"
+        current_state = self.state
+
+        if current_state == "open":
+            return False
+
+        if current_state == "half-open":
+            if self._probe_in_flight:
+                return False
+            self._probe_in_flight = True
+
+        return True
 
     def success(self) -> None:
-        self.failures, self._opened_at = 0, None
+        self.failures = 0
+        self._opened_at = None
+        self._probe_in_flight = False
 
     def failure(self) -> None:
         self.failures += 1
         if self.failures >= self.threshold:
             self._opened_at = self._clock()
+        self._probe_in_flight = False
 
 
 class LLMGateway:
