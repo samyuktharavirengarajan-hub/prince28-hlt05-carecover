@@ -609,3 +609,51 @@ they do not imply that the source corpus is complete.
 | pmjay_reserved_to_govt_without_pay.xlsx | openpyxl / python-calamine | 318 rows | 952 non-empty cells | 952 non-empty cells; identical=True | 0.01 s / 0.00 s | Both parsers produce identical normalized cell values; python-calamine is faster in this run. |
 | tnhsp_cmchis_and_pm-jay_scheme_continuation_g.o. | PyMuPDF / pypdf | - | FAILED: no_text_layer | FAILED: no_text_layer | 0.00 s / 0.00 s | Both text parsers fail because the PDF is scanned; OCR was used separately to extract its pages. |
 <!-- parsers:end -->
+
+## D08 - LLM Gateway, Streaming & Usage Tracking
+
+### Implementation
+- Added an LLM gateway with Gemini as the primary provider and Groq as the fallback provider.
+- Configured OpenAI-compatible provider clients, timeout handling, retry behaviour, and provider health checks.
+- Added a versioned system prompt at `prompts/chat_system_v1.md`.
+- Implemented `/v1/chat` with Server-Sent Events (SSE) streaming and `?stream=false` for JSON responses.
+- Added LLM call persistence in PostgreSQL, including provider, model, token usage, latency, status, fallback, and cost information.
+- Added `/v1/usage?days=7` to retrieve usage statistics.
+- Added a CLI script at `scripts/ask.py`.
+- Added circuit-breaker handling to prevent repeated calls to an unhealthy provider.
+
+### Circuit-breaker improvement
+- Identified that multiple requests could enter the half-open state after the cooldown.
+- Added a single-probe reservation using `_probe_in_flight`.
+- Reset the reservation after provider success or failure.
+- Added a regression assertion to ensure a second half-open probe is rejected.
+- Merged the fix through PR #16.
+
+### Validation and evidence
+- Gateway unit tests: 19 passed.
+- Full test suite: 78 passed.
+- `git diff --check`: passed.
+- All pre-commit hooks passed.
+- CI build-image check: passed.
+- CI lint-and-test check: passed.
+- Verified live `/v1/chat` JSON response and SSE response.
+- Verified usage records were persisted in Neon PostgreSQL.
+- Verified the production health endpoint after deployment.
+
+### Deployment
+- PR #16 merged into `main`.
+- Merge commit: `2ddd3b2b1ee0f621888239d3e966c771d546950b`.
+- Render deployment status: Live / Deploy succeeded.
+- Production health status: `ok`.
+- Production environment: `production`.
+- Live version matches the merged commit.
+
+### Limitations and observations
+- The healthcare document retrieval pipeline is not yet connected to the LLM; that integration is planned for Week 3.
+- Current responses rely on general knowledge and the system prompt's safety instructions.
+- Testing exposed occasional unsupported or hallucinated healthcare details. Responses must not be treated as verified coverage decisions.
+- Provider fallback and usage tracking were validated, but observed latency can vary by provider and request.
+
+### Key learning
+- Understood LLM provider abstraction, fallback routing, streaming responses, token and cost tracking, database persistence, and circuit-breaker states.
+- Learned why a half-open circuit breaker must allow only one recovery probe at a time.
