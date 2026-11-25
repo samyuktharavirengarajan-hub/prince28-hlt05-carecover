@@ -37,19 +37,25 @@
 
 ## 6. Current Dataset Status
 
-- Sources identified: 2
-- Sources eligible for download: 0
-- Downloads completed: 0
-- Successfully downloaded documents: 0
+Verified from `data/manifest.jsonl`, `data/manual_manifest.jsonl`, and the PostgreSQL database.
 
-Downloads were not attempted because robots.txt permission was either unknown or explicitly denied.
+- PDF manifest records: 22
+- Successfully downloaded PDF files: 7
+- Manually collected Excel files: 3
+- Total unique files available: 10
+- Total file size: 22,771,211 bytes (approximately 21.72 MiB)
+- Document records stored in PostgreSQL: 30
+- Parsed pages stored in PostgreSQL: 1,044
+- Remaining parsing failures: 0
+
+The PDF manifest contains other sources that are blocked, unavailable, invalid, or not yet verified. They are not counted as downloaded documents.
 
 ## 7. Test Evidence
 
 Unit test results:
 
-- Total unit tests: 19
-- Passed: 19
+- Total unit tests: 45
+- Passed: 45
 - Failed: 0
 
 Command:
@@ -61,7 +67,9 @@ uv run pytest tests/unit/ -v
 ## 8. Limitations
 
 - Actual download throughput has not been benchmarked.
-- File sizes and processing times have not been measured.
-- No production download capacity could be established because no source was eligible for download.
+- The measured file size represents the current collected corpus, not maximum system capacity.
+- The current corpus contains 10 unique files; it is not a complete collection of all PM-JAY and CMCHIS documents.
+- Some source URLs remain blocked, unavailable, invalid, or unverified.
+- Parser comparison is documented separately in `NOTES.md`.
 
 The configured concurrency and rate limits describe implementation settings, not measured production capacity.

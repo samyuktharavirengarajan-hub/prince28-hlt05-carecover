@@ -131,8 +131,20 @@ def check_robots(url: str, retries: int = 3) -> str:
                 follow_redirects=True,
             )
 
-            if response.status_code != 200:
+            if response.status_code in (404, 410):
+                return "robots_allowed"
+
+            if response.status_code in (401, 403):
+                return "blocked_robots"
+
+            if response.status_code == 429:
                 return "robots_unknown"
+
+            if 400 <= response.status_code < 500:
+                return "robots_unknown"
+
+            if response.status_code >= 500:
+                return "blocked_robots"
 
             parser = Protego.parse(response.text)
             allowed = parser.can_fetch(url, "CareCoverBot")

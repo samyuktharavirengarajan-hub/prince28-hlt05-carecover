@@ -573,11 +573,39 @@ Created:
 
 ## 4. Dataset Status
 
-- Manifest entries: 2.
-- Downloaded files: 0.
-- Files available in `data/raw`: 0.
-- PM-JAY HBP 2022: `robots_unknown`.
-- PM-JAY Senior Citizens FAQ: `blocked_robots`.
-- Corpus parsing result: 0 files, 0 pages.
+Verified against `data/manifest.jsonl`, `data/manual_manifest.jsonl`,
+the files in `data/raw/`, and PostgreSQL.
 
-The expected 364-file corpus is not available in the current repository. Parser comparison and full-corpus validation are pending confirmation of the correct dataset and manifest format.
+- PDF manifest records: 22.
+- Successfully downloaded PDF files: 7.
+- Manually collected Excel files: 3.
+- Total unique collected files: 10.
+- Total collected file size: 22,771,211 bytes (approximately 21.72 MiB).
+- Document records stored in PostgreSQL: 30.
+- Parsed pages stored in PostgreSQL: 1,044.
+- Remaining parsing failures: 0.
+
+The corpus includes PM-JAY package data, HBP 2022/HIMCARE
+packages, hospital instructions, claim settlement, claims adjudication,
+fraud investigation, and a TNHSP scheme document.
+
+Some source URLs remain blocked, unavailable, or unverified.
+The figures above describe the files actually collected and validated;
+they do not imply that the source corpus is complete.
+
+## D07 · Parser comparison
+
+<!-- parsers:start -->
+| File | Parsers (A / B) | Pages / Rows | A found | B found | Time (A / B) | Better, why |
+|---|---|---|---|---|---|---|
+| pm-jay_claims_adjudication_manual_(february_2019 | PyMuPDF / pypdf | 32 | 61,525 chars, 315 headings, 15 tables | 62,883 chars, 0 headings, 0 tables | 8.01 s / 1.45 s | PyMuPDF extracts more structural information (315 headings, 15 tables); pypdf is faster and extracts slightly more characters. |
+| pm-jay_fraud_investigation_and_medical_audit_man | PyMuPDF / pypdf | 68 | 85,935 chars, 383 headings, 40 tables | 70,486 chars, 0 headings, 0 tables | 5.35 s / 1.62 s | PyMuPDF extracts more characters and detects 383 headings and 40 tables; pypdf is faster but detects no structure. |
+| pm-jay_pm-jay_claim_settlement_guidelines.pdf | PyMuPDF / pypdf | 4 | 6,611 chars, 7 headings, 0 tables | 6,571 chars, 0 headings, 0 tables | 0.05 s / 0.08 s | PyMuPDF is faster and detects 7 headings; text extraction is similar. |
+| pm-jay_pm-jay_compendium_of_instructions_part_ii | PyMuPDF / pypdf | 96 | 101,378 chars, 81 headings, 7 tables | 99,211 chars, 0 headings, 0 tables | 3.54 s / 1.99 s | PyMuPDF detects 81 headings and 7 tables and extracts slightly more text; pypdf is faster. |
+| pm-jay_pm-jay_hbp_2022_and_himcare_packages.pdf | PyMuPDF / pypdf | 727 | 1,612,927 chars, 24 headings, 1 tables | 1,603,617 chars, 0 headings, 0 tables | 3.74 s / 28.70 s | PyMuPDF is substantially faster and detects headings and a table; pypdf extracts slightly fewer characters without structural details. |
+| pm-jay_pm-jay_standard_operating_protocol_for_ho | PyMuPDF / pypdf | 110 | 65,174 chars, 139 headings, 9 tables | 100,294 chars, 0 headings, 0 tables | 1.94 s / 1.97 s | PyMuPDF detects 139 headings and 9 tables; pypdf extracts more characters at a similar speed, but detects no structure. |
+| pmjay_open_to_all.xlsx | openpyxl / python-calamine | 598 rows | 7,165 non-empty cells | 7,165 non-empty cells; identical=True | 0.05 s / 0.01 s | Both parsers produce identical normalized cell values; python-calamine is faster in this run. |
+| pmjay_reserved_to_govt_with_pay.xlsx | openpyxl / python-calamine | 495 rows | 1,483 non-empty cells | 1,483 non-empty cells; identical=True | 0.02 s / 0.00 s | Both parsers produce identical normalized cell values; python-calamine is faster in this run. |
+| pmjay_reserved_to_govt_without_pay.xlsx | openpyxl / python-calamine | 318 rows | 952 non-empty cells | 952 non-empty cells; identical=True | 0.01 s / 0.00 s | Both parsers produce identical normalized cell values; python-calamine is faster in this run. |
+| tnhsp_cmchis_and_pm-jay_scheme_continuation_g.o. | PyMuPDF / pypdf | - | FAILED: no_text_layer | FAILED: no_text_layer | 0.00 s / 0.00 s | Both text parsers fail because the PDF is scanned; OCR was used separately to extract its pages. |
+<!-- parsers:end -->
