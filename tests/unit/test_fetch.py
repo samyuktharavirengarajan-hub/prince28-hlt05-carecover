@@ -168,3 +168,54 @@ def test_robots_retries_after_temporary_network_errors():
 
     assert result == "robots_allowed"
     assert mock_get.call_count == 3
+
+
+def test_robots_allows_when_file_not_found():
+    response = Mock()
+    response.status_code = 404
+
+    with patch("carecover.ingest.fetch.httpx.get", return_value=response):
+        result = check_robots("https://example.com/test.pdf")
+
+    assert result == "robots_allowed"
+
+
+def test_robots_blocks_when_server_error():
+    response = Mock()
+    response.status_code = 500
+
+    with patch("carecover.ingest.fetch.httpx.get", return_value=response):
+        result = check_robots("https://example.com/test.pdf")
+
+    assert result == "blocked_robots"
+
+
+def test_robots_blocks_when_access_is_denied():
+    for status_code in (401, 403):
+        response = Mock()
+        response.status_code = status_code
+
+        with patch("carecover.ingest.fetch.httpx.get", return_value=response):
+            result = check_robots("https://example.com/test.pdf")
+
+        assert result == "blocked_robots"
+
+
+def test_robots_returns_unknown_when_rate_limited():
+    response = Mock()
+    response.status_code = 429
+
+    with patch("carecover.ingest.fetch.httpx.get", return_value=response):
+        result = check_robots("https://example.com/test.pdf")
+
+    assert result == "robots_unknown"
+
+
+def test_robots_returns_unknown_for_other_client_errors():
+    response = Mock()
+    response.status_code = 400
+
+    with patch("carecover.ingest.fetch.httpx.get", return_value=response):
+        result = check_robots("https://example.com/test.pdf")
+
+    assert result == "robots_unknown"
