@@ -20,3 +20,8 @@ data/raw/
 .vscode/
 .idea/
 .DS_Store
+
+# Local backups and temporary diagnostics
+data/manifest.backup.jsonl
+scripts/compare_parsers.py.backup
+scripts/inspect_llm_calls.py
