@@ -9,6 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from carecover.config import Settings
 from carecover.db.repository import DocumentRepository
+from carecover.llm.gateway import LLMGateway
 
 logger = logging.getLogger("carecover")
 
@@ -44,3 +45,10 @@ async def check_db(session: SessionDep) -> bool:
 SettingsDep = Annotated[Settings, Depends(get_app_settings)]
 RepoDep = Annotated[DocumentRepository, Depends(get_repo)]
 DbCheckDep = Annotated[bool, Depends(check_db)]
+
+
+def get_llm_gateway(request: Request) -> LLMGateway:
+    return request.app.state.llm_gateway
+
+
+LLMGatewayDep = Annotated[LLMGateway, Depends(get_llm_gateway)]
