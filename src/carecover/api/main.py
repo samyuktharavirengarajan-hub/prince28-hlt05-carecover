@@ -7,9 +7,11 @@ from fastapi import APIRouter, FastAPI
 
 from carecover.api.errors import register_error_handlers
 from carecover.api.middleware import request_context
-from carecover.api.routes import documents, health
+from carecover.api.routes import chat, documents, health, usage
 from carecover.config import Settings, get_settings
+from carecover.db.llm_calls import make_recorder
 from carecover.db.session import make_engine, make_sessionmaker
+from carecover.llm.gateway import build_gateway
 from carecover.logging_setup import setup_logging
 
 logger = logging.getLogger("carecover")
@@ -38,13 +40,18 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.state.settings = settings
     app.state.engine = engine
     app.state.sessionmaker = sessionmaker
+    app.state.llm_gateway = build_gateway(
+        settings,
+        recorder=make_recorder(sessionmaker),
+    )
 
     app.middleware("http")(request_context)
     register_error_handlers(app)
 
     v1 = APIRouter(prefix="/v1")
     v1.include_router(documents.router)
-
+    v1.include_router(chat.router)
+    v1.include_router(usage.router)
     app.include_router(health.router)
     app.include_router(v1)
 
