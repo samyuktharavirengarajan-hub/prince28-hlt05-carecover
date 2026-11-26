@@ -100,12 +100,20 @@ class OpenAICompatProvider:
         # 10 s to connect; `timeout` seconds of silence at most while the answer arrives
         self._client = client or httpx.AsyncClient(timeout=httpx.Timeout(timeout, connect=10.0))
 
-    def _body(self, messages: list[Message], temperature: float, stream: bool) -> dict:
+    def _body(
+        self,
+        messages: list[Message],
+        temperature: float,
+        stream: bool,
+        response_format: dict | None = None,
+    ) -> dict:
         body = {
             "model": self.model,
             "messages": messages,
             "temperature": temperature,
         }
+        if response_format:
+            body["response_format"] = response_format
         if stream:
             body |= {"stream": True, "stream_options": {"include_usage": True}}
         return body
@@ -127,8 +135,14 @@ class OpenAICompatProvider:
         timed_out = isinstance(exc, httpx.TimeoutException)
         return LLMError(type(exc).__name__, retryable=not timed_out)
 
-    async def generate(self, messages: list[Message], *, temperature: float = 0.2) -> Reply:
-        body = self._body(messages, temperature, stream=False)
+    async def generate(
+        self,
+        messages: list[Message],
+        *,
+        temperature: float = 0.2,
+        response_format: dict | None = None,
+    ) -> Reply:
+        body = self._body(messages, temperature, stream=False, response_format=response_format)
         try:
             response = await self._client.post(self._url, headers=self._headers, json=body)
         except httpx.TransportError as exc:
@@ -197,12 +211,14 @@ class FakeLLM:
         self.name, self.model = name, model
         self.script = list(script or [])
         self.calls = 0
+        self.seen: list[dict] = []
 
     def _next(self) -> object:
         self.calls += 1
         return self.script.pop(0) if self.script else "A fake answer."
 
-    async def generate(self, messages: list[Message], *, temperature: float = 0.2) -> Reply:
+    async def generate(self, messages: list[Message], **options) -> Reply:
+        self.seen.append({"messages": messages, **options})
         item = self._next()
         if isinstance(item, Exception):
             raise item
