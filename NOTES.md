@@ -657,3 +657,106 @@ they do not imply that the source corpus is complete.
 ### Key learning
 - Understood LLM provider abstraction, fallback routing, streaming responses, token and cost tracking, database persistence, and circuit-breaker states.
 - Learned why a half-open circuit breaker must allow only one recovery probe at a time.
+
+## D09 · Prompt versions compared
+
+<!-- prompts:start -->
+
+| Prompt version | Correct | Accuracy | Invalid replies | Avg tokens in |
+|---|---|---|---|---|
+| classify_v1 | 13/20 | 65% | 0 | 115 |
+| classify_v2 | 18/20 | 90% | 0 | 441 |
+| classify_v3 | 19/20 | 95% | 0 | 552 |
+| classify_v4 | 19/20 | 95% | 0 | 592 |
+
+<!-- prompts:end -->
+
+### v4 experiment and analysis
+- Copied the best baseline prompt (`classify_v3`) to `classify_v4`.
+- Changed only Decision Rule 4 to distinguish patient context from requests requiring private individual records or live information.
+- v3 baseline: 19/20 correct (95%).
+- v4 result: 19/20 correct (95%).
+- Fixed line 4: patient age, condition, and location were incorrectly causing a `personal` classification despite the question asking for document-based scheme information and package rates.
+- Introduced a new error on line 14: family-specific eligibility based on income and residence was classified as `docs` instead of `personal`.
+- Conclusion: v4 did not improve overall accuracy. It fixed one error but introduced another. Retained v4 as the fourth experiment without claiming an accuracy improvement.
+
+### D09 · Prompts and structured output
+- My best router prompt: `classify_v3` with 19 / 20 correct (95%).
+- What I changed in v4, and what happened to the score: Changed Decision Rule 4 so age, condition, and location alone would not classify a general scheme question as personal. Accuracy remained 19 / 20 (95%): line 4 was fixed, but line 14 became incorrect.
+- The question my best version still gets wrong: line 14; wanted `personal`, got `docs`. It asks about family eligibility based on income and residence, which requires individual eligibility assessment.
+- A label in my test set that I changed after seeing the results: none recorded.
+- Input tokens per question: v1 115, best version (v3) 552. The extra 30 percentage points of accuracy seem worth the higher token use for more reliable routing, but v3 uses about 4.8 times as many input tokens.
+
+### My contract (DocMeta)
+- Fields I kept from my project card: `scheme`, `package_code`, `procedure`, `rate`, `preauth_required`.
+- Fields I deleted, and why they make no sense per document: `specialty` and `govt_only`; they are not consistently applicable as document-level metadata.
+- The field I tightened, and how: `year` is optional but restricted to 1950–2027; absent years are represented as `null`.
+
+### Extraction run
+- Prompt version: `extract_v1` · documents: 10 OK, 2 repaired, 0 failed (of 10 eligible parsed source documents).
+- Not finished? Why, and how many are left: Finished; all 10 eligible source documents were processed, with 0 pending.
+- Most common failure reason, and what I did about it: No final extraction failures. Validation repairs handled a package-code list exceeding the limit of 8 and a summary exceeding 300 characters.
+- A record that was valid but wrong: `494 paid GH reserved`; `scheme`; it returned an empty list, but the source identifies the column as `CMCHIS Speciality`, so the scheme should include `CMCHIS`.
+- Cost at the gateway-recorded rate: Rs 0.4694 in total, Rs 0.04694 per document.
+
+### One thing that went wrong today, and how I fixed it
+- The local `/v1/documents` API initially returned zero results even though the database contained 30 records. SQL, ORM, repository, and TestClient checks confirmed the data was present. Restarting the stale Uvicorn development server fixed the API responses without any source-code changes.
+
+## D09 · Structured metadata extraction
+
+### Five-document trial
+- Prompt: `extract_v1`.
+- Documents attempted: 5.
+- Successful extractions: 5.
+- Failed extractions: 0.
+- Repaired extractions: 1.
+- Input tokens: 17,052.
+- Output tokens: 5,029.
+- Total recorded cost: ₹0.2648.
+- Duration: 161 seconds.
+- All five records were saved to PostgreSQL.
+
+### Source inspection and observed limitation
+- Inspected the extracted metadata and original parsed source text.
+- `494 paid GH reserved` explicitly identifies its speciality column as `CMCHIS Speciality`, but extraction returned an empty `scheme` list. This is a missing scheme-classification value.
+- `SL#` contains a multi-page PM-JAY package catalogue. The extraction initially returned 20 package codes, exceeding the schema limit of 8. The repair loop produced a valid result with only 8 codes, so the final metadata may be incomplete.
+- This demonstrates that schema validation and successful repair guarantee structural validity, not extraction completeness.
+- The current `max_length=8` limit for package-code lists is unsuitable for large catalogues and should be revisited in a future extraction version.
+
+## D09 · Whole-corpus metadata extraction
+
+### Extraction results
+- Eligible source documents: 10 (7 PDFs + 3 Excel workbooks).
+- Existing `record` entries excluded: 20.
+- Documents processed with `extract_v1`: 10.
+- Successful extractions: 10.
+- Failed extractions: 0.
+- Pending eligible documents: 0.
+- Repaired extractions: 2.
+- Total input tokens: 27,483.
+- Total output tokens: 9,599.
+- Total recorded cost: ₹0.4694.
+- Combined extraction time: 227 seconds.
+
+### Extracted document kinds
+| Kind | Count |
+|---|---:|
+| list | 6 |
+| guideline | 1 |
+| notice | 1 |
+| other | 1 |
+| reference | 1 |
+
+### API filter verification
+Tested the local `/v1/documents` endpoint:
+- `?doc_kind=list&limit=3` → 6 matches; returned records had `doc_kind=list`.
+- `?language=en&limit=3` → 10 matches; returned records had `language=en`.
+- `?scheme=CMCHIS&limit=3` → 13 matches; returned records matched CMCHIS.
+
+All three filters returned HTTP 200 with the expected results. The scheme filter also includes existing `record` entries.
+
+### API troubleshooting
+- Initial development-server responses returned zero documents.
+- Direct SQL, SQLAlchemy ORM, repository, and FastAPI TestClient diagnostics all confirmed the 30 database records were available.
+- Restarting the Uvicorn development server resolved the stale-process issue.
+- No source-code changes were required.

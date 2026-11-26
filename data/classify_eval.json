@@ -1,0 +1,22 @@
+﻿[
+  {"question": "What is the PM-JAY package rate for knee replacement?", "label": "docs"},
+  {"question": "Which PM-JAY package categories are open to all hospitals?", "label": "docs"},
+  {"question": "What documents are required for hospital pre-authorisation?", "label": "docs"},
+  {"question": "What does the hospital standard operating procedure say about claims?", "label": "docs"},
+  {"question": "What are the claim settlement guidelines under PM-JAY?", "label": "docs"},
+  {"question": "What is the role of the Claims Adjudication Manual?", "label": "docs"},
+  {"question": "What does the fraud investigation manual describe?", "label": "docs"},
+  {"question": "What is covered in the PM-JAY Compendium of Instructions Part II?", "label": "docs"},
+  {"question": "What does Tamil Nadu G.O.530 say about continuing the scheme?", "label": "docs"},
+  {"question": "Are HIMCARE packages included in the HBP 2022 package document?", "label": "docs"},
+  {"question": "Is my father's knee replacement eligible under CMCHIS?", "label": "personal"},
+  {"question": "Has my hospital submitted my PM-JAY pre-authorisation request?", "label": "personal"},
+  {"question": "How much claim amount is pending for my treatment?", "label": "personal"},
+  {"question": "Which empanelled hospital near me is accepting patients right now?", "label": "personal"},
+  {"question": "Can you check whether my health card is active?", "label": "personal"},
+  {"question": "Which phone should I buy under Rs 20,000?", "label": "off_topic"},
+  {"question": "Write a birthday wish for my friend.", "label": "off_topic"},
+  {"question": "Explain how to train a pet dog.", "label": "off_topic"},
+  {"question": "What are the best tourist places in Kerala?", "label": "off_topic"},
+  {"question": "Help me write a Python program to sort a list.", "label": "off_topic"}
+]

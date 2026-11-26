@@ -25,3 +25,5 @@ data/raw/
 data/manifest.backup.jsonl
 scripts/compare_parsers.py.backup
 scripts/inspect_llm_calls.py
+
+eval/cache/
