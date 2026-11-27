@@ -112,3 +112,27 @@ def test_app_refuses_to_start_without_app_env(monkeypatch):
         pass
     else:
         raise AssertionError("Settings should require APP_ENV")
+
+
+def test_ingest_rejects_missing_or_invalid_admin_token(client):
+    client.app.state.settings.admin_token = "test-secret"
+
+    missing = client.post("/v1/ingest")
+    invalid = client.post(
+        "/v1/ingest",
+        headers={"X-Admin-Token": "wrong-token"},
+    )
+
+    assert missing.status_code == 401
+    assert invalid.status_code == 401
+
+
+def test_ingest_refuses_when_admin_token_is_not_configured(client):
+    client.app.state.settings.admin_token = ""
+
+    response = client.post(
+        "/v1/ingest",
+        headers={"X-Admin-Token": "test-secret"},
+    )
+
+    assert response.status_code == 403
