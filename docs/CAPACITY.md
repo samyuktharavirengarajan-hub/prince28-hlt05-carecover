@@ -1,4 +1,4 @@
-﻿# CareCover Fetcher Capacity Report
+# CareCover Fetcher Capacity Report
 
 ## 1. Concurrency
 
@@ -42,7 +42,7 @@ Verified from `data/manifest.jsonl`, `data/manual_manifest.jsonl`, and the Postg
 - PDF manifest records: 22
 - Successfully downloaded PDF files: 7
 - Manually collected Excel files: 3
-- Total unique files available: 10
+- Total unique files collected: 10
 - Total file size: 22,771,211 bytes (approximately 21.72 MiB)
 - Document records stored in PostgreSQL: 30
 - Parsed pages stored in PostgreSQL: 1,044
@@ -54,15 +54,18 @@ The PDF manifest contains other sources that are blocked, unavailable, invalid, 
 
 Unit test results:
 
-- Total unit tests: 45
-- Passed: 45
+- Total unit tests: 82
+- Passed: 82
 - Failed: 0
+- Warnings: 1 (optional PySocks dependency warning; tests passed)
 
 Command:
 
 ```powershell
 uv run pytest tests/unit/ -v
 ```
+
+Latest verification: 2026-11-26 — 82 passed, 0 failed, 1 non-blocking dependency warning.
 
 ## 8. Limitations
 
