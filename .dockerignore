@@ -12,7 +12,6 @@ __pycache__/
 .coverage
 htmlcov/
 tests/
-data/raw/
 docker/
 *.md
 !README.md
