@@ -1,22 +1,28 @@
 
 # CareCover – 10 Test Questions
 
-1. Is knee replacement covered under PM-JAY?
+## PM-JAY
 
-2. Is knee replacement covered under Tamil Nadu CMCHIS?
+| No. | Question |
+|---|---|
+| 1 | What is the package code for thermal burns management? |
+| 2 | What is the package rate for thermal burns affecting 25% to 40% TBSA? |
+| 3 | What is the package code for scald burns management? |
+| 4 | What is the package rate for scald burns affecting 40% to 60% TBSA? |
+| 5 | What are the package rates for thermal burns affecting 60% to 80% TBSA across different hospital tiers? |
 
-3. What is the package code for knee replacement under PM-JAY?
+## Tamil Nadu CMCHIS
 
-4. What is the package rate for a particular procedure under CMCHIS?
+| No. | Question |
+|---|---|
+| 6 | What is the package code for Coronary Balloon Angioplasty (PPCI)? |
+| 7 | What is the package rate for PTCA with Stent? |
+| 8 | What specialty does ASD Device Closure belong to? |
+| 9 | What are the hospital-grade rates for Balloon Valvotomy (Any Valve)? |
+| 10 | What is the package rate for Balloon Valvotomy (Any Valve) – Pulmonary? |
 
-5. Does a procedure require pre-authorisation?
+## Data limitations
 
-6. Which empanelled hospital has the earliest available surgery appointment tomorrow? (Unanswerable with the current dataset because live appointment availability is not included.)
-
-7. Is a particular treatment restricted to government hospitals?
-
-8. What is the difference between the PM-JAY and CMCHIS package rates for the same procedure?
-
-9. Which specialty does a particular medical procedure belong to?
-
-10. Which hospitals are empanelled under the selected healthcare scheme?
+- The current dataset contains 10 PM-JAY and 10 CMCHIS records.
+- Pre-authorisation requirements and government-hospital restrictions are not verified in the current dataset.
+- Live hospital appointment availability is not included.
