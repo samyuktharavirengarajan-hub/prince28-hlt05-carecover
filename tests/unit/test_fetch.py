@@ -7,6 +7,7 @@ from carecover.ingest.fetch import check_robots, download_source
 def test_robots_blocks_disallowed_url():
     response = Mock()
     response.status_code = 200
+    response.headers = {"Content-Type": "text/plain"}
     response.text = "User-agent: *\nDisallow: /"
 
     with patch("carecover.ingest.fetch.httpx.get", return_value=response):
@@ -18,6 +19,7 @@ def test_robots_blocks_disallowed_url():
 def test_robots_allows_permitted_url():
     response = Mock()
     response.status_code = 200
+    response.headers = {"Content-Type": "text/plain"}
     response.text = "User-agent: *\nAllow: /"
 
     with patch("carecover.ingest.fetch.httpx.get", return_value=response):
@@ -151,6 +153,7 @@ def test_robots_retries_after_temporary_network_errors():
 
     response = Mock()
     response.status_code = 200
+    response.headers = {"Content-Type": "text/plain"}
     response.text = "User-agent: *\nAllow: /"
 
     with (
