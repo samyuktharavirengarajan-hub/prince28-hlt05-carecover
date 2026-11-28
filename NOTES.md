@@ -760,3 +760,43 @@ All three filters returned HTTP 200 with the expected results. The scheme filter
 - Direct SQL, SQLAlchemy ORM, repository, and FastAPI TestClient diagnostics all confirmed the 30 database records were available.
 - Restarting the Uvicorn development server resolved the stale-process issue.
 - No source-code changes were required.
+
+## D10 - Queue and worker
+
+### Local ingestion
+
+- First run: 7 documents queued; 6 done and 1 failed.
+- First run pages: 1,037; elapsed time: 473.8 seconds.
+- Second run: 3 Excel workbooks queued; all 3 done.
+- Second run pages: 3; elapsed time: 11.5 seconds.
+- Combined: 10 items = 9 done + 1 failed.
+- Total pages reported: 1,040.
+- Database documents: 9; distinct external IDs: 9.
+- Ingestion concurrency: 2.
+- INGEST_RPM: 12.0.
+
+### Failure and recovery
+
+- Failed document: G.O. 530 CMCHIS PDF.
+- Error: `parse: no_text_layer`.
+- Attempts: 1.
+- Worker startup recovery was observed: after restarting the worker, it found and re-queued 3 unfinished items from PostgreSQL.
+- The worker recovered those items and the first job eventually finished.
+
+### Kill test
+
+- The exact 20-item worker kill test was not completed.
+- Only 10 distinct local source files were available.
+- No duplicate manifest records or artificial documents were created to simulate 20 real documents.
+- A separate worker startup recovery test was observed, but it is not being claimed as a completed kill test.
+
+### Live ingestion
+
+- Render ingestion test: pending.
+- Render Redis configuration: pending.
+- Unauthenticated ingestion authorization check: pending.
+
+### Evidence
+
+- Generated report: `docs/INGEST_REPORT.md`.
+- Report generator: `scripts/ingest_report.py`.
