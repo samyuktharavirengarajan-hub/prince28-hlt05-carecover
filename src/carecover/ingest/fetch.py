@@ -146,9 +146,13 @@ def check_robots(url: str, retries: int = 3) -> str:
             if response.status_code >= 500:
                 return "blocked_robots"
 
+            content_type = response.headers.get("Content-Type", "").lower()
+
+            if "text/plain" not in content_type:
+                return "robots_unknown"
+
             parser = Protego.parse(response.text)
             allowed = parser.can_fetch(url, "CareCoverBot")
-
             return "robots_allowed" if allowed else "blocked_robots"
 
         except httpx.HTTPError:
